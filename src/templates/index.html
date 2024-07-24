@@ -1,0 +1,25 @@
+<!-- src/templates/index.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Label</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the FAT</h1>
+        <form action="{{ url_for('print_info') }}" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="pronouns">Pronouns:</label>
+            <input type="text" id="pronouns" name="pronouns" required>
+            <input type="color" id="color" name="color" value="#ffffffff" />
+            <br>
+            <button type="submit">Print</button>
+        </form>
+    </div>
+</body>
+</html>
+Printer
