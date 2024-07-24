@@ -7,5 +7,5 @@ setup(name='printLabel',
       # Modules to import from other scripts:
       packages=find_packages(),
       # Executables
-      scripts=["printLabel.py"],
+      scripts=["app.py"],
      )

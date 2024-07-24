@@ -1,3 +1,5 @@
+#!/usr/bin/evn python
+
 from flask import Flask, render_template, request, redirect, url_for, send_file
 from PIL import Image, ImageDraw, ImageFont
 import os
@@ -11,6 +13,8 @@ paper_format = "A5"
 default_font = 60
 
 width, height = 430, 550 # size of saved image
+image_path = os.path.dirname(__file__)
+
 
 offset_x = 0 
 offset_y = -90
@@ -66,7 +70,7 @@ def create_image(name, pronouns, color):
     draw.text((n_text_x, n_text_y), name, fill=color_rgb, font=font)
     draw.text((p_text_x, p_text_y + font_size), pronouns, fill=color_rgb, font=font)
 
-    image_path = os.path.join(os.path.dirname(__file__), 'output.png')
+    image_path = os.path.join(image_path, 'output.png')
     image.save(image_path)
     return image_path
 
