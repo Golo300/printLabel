@@ -1,7 +1,7 @@
 #!/usr/bin/evn python
 
 from flask import Flask, render_template, request, redirect, url_for, send_file
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import os
 import subprocess
 
@@ -10,9 +10,9 @@ app = Flask(__name__)
 printername = "nadelPrinter"
 
 paper_format = "A5"
-default_font = 300
+default_font = 80
 
-width, height = 1800, 2400 # size of saved image
+width, height = 768, 1024 # size of saved image
 
 offset_x = 0 
 offset_y = -90
@@ -42,7 +42,9 @@ def create_image(name, pronouns, color):
 
     text = f"{name}\n{pronouns}"
     font_size = calculate_max_font_size(draw, width, height, text)
-    font = ImageFont.load_default(size=font_size)
+
+    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'AtkinsonHyperlegible-Bold.ttf')
+    font = ImageFont.truetype(font_path, font_size)
 
     bname = draw.textbbox((0, 0), name, font=font)  
     bprononus = draw.textbbox((0, 0), pronouns, font=font)  
@@ -69,15 +71,18 @@ def create_image(name, pronouns, color):
     draw.text((p_text_x, p_text_y + font_size), pronouns, fill=color_rgb, font=font)
 
     image_path = os.path.join(os.path.dirname(__file__), 'output.png')
-    image.save(image_path)
+    aliased = image.filter(ImageFilter.ModeFilter(5))
+    aliased.save(image_path)
     return image_path
 
 def calculate_max_font_size(draw, width, height, text):
     font_size = default_font  
-    min_font_size = 3   
+    min_font_size = default_font // 3   
+    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'AtkinsonHyperlegible-Bold.ttf')
 
     while True:
-        font = ImageFont.load_default(font_size)
+        font = ImageFont.truetype(font_path, font_size)
+
         bbox = draw.textbbox((0, 0), text, font=font)  
         text_width = bbox[2] - bbox[0]
         text_height = bbox[3] - bbox[1]
