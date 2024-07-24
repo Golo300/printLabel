@@ -27,16 +27,16 @@ def index():
 def print_info():
     name = request.form['name'].upper()  
     pronouns = request.form['pronouns'].upper()  
-    color = request.form['color']
+    dec = request.form['dec'].upper()  
     
-    image_path = create_image(name, pronouns, color.lstrip('#'))
+    image_path = create_image(name, pronouns, dec)
     
     send_to_printer(image_path)
     
     return redirect(url_for('index'))
 
 
-def create_image(name, pronouns, color):
+def create_image(name, pronouns, dec):
     image = Image.new('RGB', (width, height), color=(255, 255, 255))
     draw = ImageDraw.Draw(image)
 
@@ -46,29 +46,20 @@ def create_image(name, pronouns, color):
     font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'AtkinsonHyperlegible-Bold.ttf')
     font = ImageFont.truetype(font_path, font_size)
 
-    bname = draw.textbbox((0, 0), name, font=font)  
-    bprononus = draw.textbbox((0, 0), pronouns, font=font)  
+    paragraph = [name, pronouns, dec]
 
-    n_text_width = bname[2] - bname[0]
-    n_text_height = bname[3] - bname[1]
-    n_text_x = (width - n_text_width) / 2 
-    n_text_y = (height - n_text_height) / 2 - 30
+    for index, line in enumerate(paragraph):
+        bname = draw.textbbox((0, 0), line, font=font)  
 
-    n_text_x += offset_x
-    n_text_y += offset_y
+        text_width = bname[2] - bname[0]
+        text_height = bname[3] - bname[1]
+        text_x = (width - text_width) / 2 
+        text_y = (height - text_height) / 2 - 30
 
-    p_text_width = bprononus[2] - bprononus[0]
-    p_text_height = bprononus[3] - bprononus[1]
-    p_text_x = (width - p_text_width) / 2 
-    p_text_y = (height - p_text_height) / 2 - 30
+        text_x += offset_x
+        text_y += offset_y
 
-    p_text_x += offset_x
-    p_text_y += offset_y
-
-    color_rgb = tuple(int(color[i:i+2], 16) for i in (0, 2, 4))
-
-    draw.text((n_text_x, n_text_y), name, fill=color_rgb, font=font)
-    draw.text((p_text_x, p_text_y + font_size), pronouns, fill=color_rgb, font=font)
+        draw.text((text_x, text_y + index * font_size), line, fill=(0, 0, 0), font=font)
 
     image_path = os.path.join(os.path.dirname(__file__), 'output.png')
     aliased = image.filter(ImageFilter.ModeFilter(5))
