@@ -10,9 +10,9 @@ app = Flask(__name__)
 printername = "nadelPrinter"
 
 paper_format = "A5"
-default_font = 60
+default_font = 300
 
-width, height = 430, 550 # size of saved image
+width, height = 1800, 2400 # size of saved image
 
 offset_x = 0 
 offset_y = -90
